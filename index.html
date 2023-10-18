@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function getComputerChoice() {
+            const moves = ['Rock', 'Paper', 'Scissors'];
+
+            const random = Math.floor(Math.random() * moves.length);
+            
+            return moves[random];
+        }
+
+        function playRound(playerSelection, computerSelection) {
+            const playerLower = playerSelection.toLowerCase();
+            const computerLower = computerSelection.toLowerCase();
+
+            let winner = (playerLower == computerLower) ? `Tie between ${playerLower} and ${computerLower}!` :
+                (playerLower == 'rock' && computerLower == 'scissors' || playerLower == 'paper' && computerLower == 'rock' || playerLower == 'scissor' && computerLower == 'paper') ? `Player beats Computer with ${playerLower} beating ${computerLower}.` :
+                `Computer beats Player with ${computerLower} beating ${playerLower}.`
+
+            return winner;
+
+        }
+
+        let playerWins = 0
+        let computerWins = 0
+
+        function game() {
+            for (let i = 1; i < 6; i++) {
+            const playerSelection = prompt('Enter Rock, Paper, or Scissors: ');
+            const computerSelection = getComputerChoice();
+
+            let winner = playRound(playerSelection, computerSelection);
+
+            console.log("Game " + i + ":" + winner);
+            
+            keepScore(winner);
+            }  
+        }
+
+        function keepScore(winner) {
+            if (winner.startsWith('Player') == true) {
+                    playerWins++;
+                }
+                else if (winner.startsWith('Computer') == true) {
+                    computerWins++;
+                }
+        }
+
+        function announceWinner() {
+            if (playerWins > computerWins) {
+            console.log(`You win! ${playerWins} to ${computerWins}`);
+            }
+            else if (playerWins < computerWins) {
+                console.log(`Computer wins! ${computerWins} to ${playerWins}`);
+            }
+            else {
+                console.log(`Tie game. ${playerWins} to ${computerWins}`);
+            }
+        }
+
+        game();
+        announceWinner();
+
+    </script>
+</body>
+</html> 
