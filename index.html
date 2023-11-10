@@ -6,67 +6,82 @@
     <title>Document</title>
 </head>
 <body>
-    <script>
-        function getComputerChoice() {
-            const moves = ['Rock', 'Paper', 'Scissors'];
+    <button class="selection" id="rock">Rock</button>
+    <button class="selection" id="paper">Paper</button>
+    <button class="selection" id="scissors">Scissors</button>
 
-            const random = Math.floor(Math.random() * moves.length);
-            
-            return moves[random];
+    <div id="results"></div>
+
+    <script>
+        let results = document.querySelector("#results");
+        rounds = 0;
+        playerWins = 0
+        computerWins = 0
+        results.innerHTML = "";
+
+        document.querySelectorAll('.selection').forEach(button => {
+            button.addEventListener('click', function () {
+                playGame(button.id);
+            })       
+        });
+
+        function playGame(playerSelection) {
+            const computerSelection = getComputerChoice();
+            let winner = playRound(playerSelection, computerSelection);
+            keepScore(winner);
+            rounds++;
+            results.innerHTML += `<br>Round ${rounds}: ${winner}`;
+            if (rounds === 5) announceWinner();
+        }
+
+        function getComputerChoice() {
+            const moves = ['rock', 'paper', 'scissors'];
+            return moves[Math.floor(Math.random() * moves.length)];
         }
 
         function playRound(playerSelection, computerSelection) {
-            const playerLower = playerSelection.toLowerCase();
-            const computerLower = computerSelection.toLowerCase();
+            if (playerSelection === computerSelection) return `Tie between ${playerSelection} and ${computerSelection}!`;
 
-            let winner = (playerLower == computerLower) ? `Tie between ${playerLower} and ${computerLower}!` :
-                (playerLower == 'rock' && computerLower == 'scissors' || playerLower == 'paper' && computerLower == 'rock' || playerLower == 'scissor' && computerLower == 'paper') ? `Player beats Computer with ${playerLower} beating ${computerLower}.` :
-                `Computer beats Player with ${computerLower} beating ${playerLower}.`
+            const winningConditions = {
+                'rock': 'scissors',
+                'paper': 'rock',
+                'scissors': 'paper'
+            };
 
-            return winner;
-
-        }
-
-        let playerWins = 0
-        let computerWins = 0
-
-        function game() {
-            for (let i = 1; i < 6; i++) {
-            const playerSelection = prompt('Enter Rock, Paper, or Scissors: ');
-            const computerSelection = getComputerChoice();
-
-            let winner = playRound(playerSelection, computerSelection);
-
-            console.log("Game " + i + ":" + winner);
-            
-            keepScore(winner);
-            }  
+            if (winningConditions[playerSelection] === computerSelection) {
+                return `Player beats Computer with ${playerSelection} beating ${computerSelection}.`;
+            }
+            else {
+                return `Computer beats Player with ${computerSelection} beating ${playerSelection}.`;
+            }
         }
 
         function keepScore(winner) {
-            if (winner.startsWith('Player') == true) {
-                    playerWins++;
-                }
-                else if (winner.startsWith('Computer') == true) {
-                    computerWins++;
-                }
+            if (winner.startsWith('Player')) playerWins++;
+            else if (winner.startsWith('Computer')) computerWins++;
         }
 
         function announceWinner() {
             if (playerWins > computerWins) {
-            console.log(`You win! ${playerWins} to ${computerWins}`);
+                results.innerHTML += `<br>You win! ${playerWins} to ${computerWins}`;
             }
             else if (playerWins < computerWins) {
-                console.log(`Computer wins! ${computerWins} to ${playerWins}`);
+                results.innerHTML += `<br>Computer wins! ${computerWins} to ${playerWins}`;
             }
             else {
-                console.log(`Tie game. ${playerWins} to ${computerWins}`);
+                results.innerHTML += `<br>Tie game. ${playerWins} to ${computerWins}`;
             }
+            results.innerHTML += `<br><button id="reset">Reset Game</button>`;
+
+            document.querySelector("#reset").addEventListener('click', initialize);
         }
 
-        game();
-        announceWinner();
-
+        function initialize() {
+            rounds = 0;
+            playerWins = 0
+            computerWins = 0
+            results.innerHTML = "";
+        }
     </script>
 </body>
-</html> 
+</html>
